@@ -1,7 +1,15 @@
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.Scanner; // Import the Scanner class to read text files
+import java.util.ArrayList;
+
+
 abstract class Person {
   private String name;
   private String phone_number;
   private int age;
+
+  protected Person() {}
 
   protected Person(String new_name) {
     setName(new_name);
@@ -54,9 +62,17 @@ class Employee extends Person {
 
   private String id;
   
-  public Employee(String new_name, String new_phone, int new_age, String new_id) {
-    super(new_name, new_phone, new_age);
+  public void setAll(String new_name, String new_phone, int new_age, String new_id) {
+    setName(new_name);
+    setPhoneNumber(new_phone);
+    setAge(new_age);
     setID(new_id);
+  }
+
+  public Employee() {}
+
+  public Employee(String new_name, String new_phone, int new_age, String new_id) {
+    setAll(new_name, new_phone, new_age, new_id);
   }
 
   public void setID(String new_id) {
@@ -98,16 +114,39 @@ class SalesLead extends Person {
 }
 
 public class CRM {
-static void myMethod() {
-System.out.println("Yes my method is working!");
-}
+
+  static void parseCRMFileLine(Employee emp,String line) {
+    String fields[] = line.split(",");
+    String new_name = fields[0];
+    String new_phone = fields[1];
+    String new_id = fields[3];
+    int new_age = 0;
+    try {
+      new_age = Integer.parseInt(fields[2]);
+    } catch (NumberFormatException e) {
+    new_age  = 0;
+    }
+    emp.setAll(new_name, new_phone, new_age, new_id);
+  }
+
+  static void readFromCRMDataFile() {
+    String text_line;
+    Employee employee = new Employee();
+    ArrayList<Employee> employees = new ArrayList<Employee>();
+    try {
+      File crm_file = new File("crm.txt");
+      Scanner file_scanner = new Scanner(crm_file);
+      text_line = file_scanner.nextLine ();
+      parseCRMFileLine(employee,text_line);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();    
+    }
+    employees.add(employee);
+    employees.get(0).print();
+  }
 
   public static void main(String[] args) {
-    Employee johnSmith = new Employee("John Smith","920-227-3248",18,"id-abc-123");
-    SalesLead judySmith = new SalesLead("Judy Smith","920-227-3249",19,"Apple");
-    judySmith.print();
-    johnSmith.print();
-    myMethod();
+    readFromCRMDataFile();
   }
 }
 
