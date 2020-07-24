@@ -98,11 +98,16 @@ class SalesLead extends Person {
 }
 
 public class CRM {
+static void myMethod() {
+System.out.println("Yes my method is working!");
+}
 
   public static void main(String[] args) {
     Employee johnSmith = new Employee("John Smith","920-227-3248",18,"id-abc-123");
     SalesLead judySmith = new SalesLead("Judy Smith","920-227-3249",19,"Apple");
     judySmith.print();
     johnSmith.print();
+    myMethod();
   }
 }
+
